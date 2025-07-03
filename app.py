@@ -8,7 +8,7 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
-st.title("📈 Multi-day Stock Price Forecasting using LSTM + Matplotlib")
+st.title("Multi-day Stock Price Forecasting using LSTM + Matplotlib")
 
 
 @st.cache_data
@@ -28,7 +28,7 @@ def prepare_lstm_data(data, time_step=60):
     return np.array(X), np.array(y)
 
 
-st.sidebar.header("🔧 Input Parameters")
+st.sidebar.header("Input Parameters")
 stock_symbol = st.sidebar.text_input("Enter stock symbol:", "TCS").upper().strip()
 period = st.sidebar.selectbox("Select data period:", ["6mo", "1y", "2y"], index=1)
 epochs = st.sidebar.slider("Training epochs:", 5, 50, 10, 5)
@@ -39,10 +39,10 @@ try:
     stock_data = fetch_historical_data(stock_symbol, period)
     df = stock_data[['Close']]
 
-    st.markdown("### 🗃️ Latest Data Snapshot")
+    st.markdown("### Latest Data Snapshot")
     st.dataframe(df.tail())
 
-    st.markdown("### 📈 Historical Closing Prices")
+    st.markdown("### Historical Closing Prices")
     plt.figure(figsize=(10,4))
     plt.plot(df.index, df['Close'], label='Close Price', color='blue')
     plt.title(f"{stock_symbol} Closing Prices ({period})")
@@ -75,12 +75,12 @@ try:
     model.compile(optimizer='adam', loss='mean_squared_error')
 
  
-    st.markdown("### 🚀 Training LSTM Model")
+    st.markdown("### Training LSTM Model")
     with st.spinner("Training... (please wait)"):
         history = model.fit(X, y_data, batch_size=32, epochs=epochs, verbose=0)
 
     
-    st.markdown(f"### 🔮 Forecasting Next {forecast_days} Days")
+    st.markdown(f"### Forecasting Next {forecast_days} Days")
     predictions = []
     input_seq = scaled_data[-time_step:].reshape(1, time_step, 1)
 
@@ -116,10 +116,10 @@ try:
     st.pyplot(plt)
     plt.close()
 
-    st.markdown("### 📅 Forecasted Prices")
+    st.markdown("### Forecasted Prices")
     st.dataframe(forecast_df)
 
-    st.info("⚠️ Note: LSTM predictions are based purely on historical prices without external market factors. Use cautiously for decision-making.")
+    st.info("Note: LSTM predictions are based purely on historical prices without external market factors. Use cautiously for decision-making.")
 
 except Exception as e:
-    st.error(f"❌ Error: {e}")
+    st.error(f"Error: {e}")
